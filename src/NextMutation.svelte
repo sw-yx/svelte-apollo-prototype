@@ -3,7 +3,7 @@
   import { restore, mutate } from "svelte-apollo";
   import { auth, client, suggestCORSSetup } from "./apollo";
   import gql from "graphql-tag";
-
+  import CheckLogin from './CheckLogin.svelte'
   const NEXT_MUTATION = gql`
     fragment SpotifyPlayerFragment on SpotifyPlayer {
       isPlaying
@@ -41,26 +41,11 @@
       result = { error: error };
     }
   }
-  async function handleLogin(service) {
-    await auth.login(service);
-    const isLoggedIn = await auth.isLoggedIn(service);
-    if (isLoggedIn) {
-      NextMutation();
-    }
-  }
-
-  $: needsLoginService = auth.findMissingAuthServices(result.errors)[0];
 </script>
 
 <div>
   <h2>NextMutation</h2>
   <pre>{JSON.stringify(result, null, 2)}</pre>
   <button on:click={NextMutation}>Run NextMutation</button>
-  {#if needsLoginService}
-    <button on:click={() => handleLogin(needsLoginService)}>Login to
-      {needsLoginService}</button>
-  {/if}
-  {#if result.error}
-    {@html suggestCORSSetup(result.error)}
-  {/if}
+  <CheckLogin {result} />
 </div>

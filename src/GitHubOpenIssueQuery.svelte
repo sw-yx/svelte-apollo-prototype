@@ -47,6 +47,7 @@
 
 <script>
   import { restore, query } from "svelte-apollo";
+  import CheckLogin from './CheckLogin.svelte'
 
   export let cache;
   restore(client, GIT_HUB_OPEN_ISSUE_QUERY, cache.data);
@@ -64,10 +65,6 @@
       request.refetch();
     }
   }
-
-  function needsLoginService(result) {
-    return auth.findMissingAuthServices(result.errors)[0];
-  }
 </script>
 
 <div>
@@ -76,17 +73,12 @@
     {#await $request}
       <li>Loading...</li>
     {:then result}
-      <pre>{JSON.stringify(result, null, 2)}</pre>
-      <button on:click={() => request.refetch({ fetchPolicy: 'network-only' })}>
-        Refetch
-      </button>
-
-      {#if needsLoginService(result)}
-        <button on:click={() => handleLogin(needsLoginService(result))}>
-          Login to
-          {needsLoginService(result)}
+      <CheckLogin {result}>
+        <pre>{JSON.stringify(result, null, 2)}</pre>
+        <button on:click={() => request.refetch({ fetchPolicy: 'network-only' })}>
+          Refetch
         </button>
-      {/if}
+      </CheckLogin>
     {:catch error}
       <li>Error loading articles: {error}</li>
       <button on:click={handleLogin}>Login</button>

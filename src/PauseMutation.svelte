@@ -2,6 +2,7 @@
 <script>
   import { restore, mutate } from "svelte-apollo";
   import { auth, client, suggestCORSSetup } from "./apollo";
+  import CheckLogin from './CheckLogin.svelte'
   import gql from "graphql-tag";
 
   const PAUSE_MUTATION = gql`
@@ -41,26 +42,11 @@
       result = { error: error };
     }
   }
-  async function handleLogin(service) {
-    await auth.login(service);
-    const isLoggedIn = await auth.isLoggedIn(service);
-    if (isLoggedIn) {
-      PauseMutation();
-    }
-  }
-
-  $: needsLoginService = auth.findMissingAuthServices(result.errors)[0];
 </script>
 
 <div>
   <h2>PauseMutation</h2>
   <pre>{JSON.stringify(result, null, 2)}</pre>
   <button on:click={PauseMutation}>Run PauseMutation</button>
-  {#if needsLoginService}
-    <button on:click={() => handleLogin(needsLoginService)}>Login to
-      {needsLoginService}</button>
-  {/if}
-  {#if result.error}
-    {@html suggestCORSSetup(result.error)}
-  {/if}
+  <CheckLogin {result} />
 </div>

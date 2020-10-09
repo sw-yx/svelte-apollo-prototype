@@ -3,6 +3,7 @@
   import { restore, mutate } from "svelte-apollo";
   import { auth, client, suggestCORSSetup } from "./apollo";
   import gql from "graphql-tag";
+  import CheckLogin from './CheckLogin.svelte'
 
   const ADD_COMMENT_MUTATION = gql`
     mutation AddComment($body: String!) {
@@ -40,26 +41,11 @@
       result = { error: error };
     }
   }
-  async function handleLogin(service) {
-    await auth.login(service);
-    const isLoggedIn = await auth.isLoggedIn(service);
-    if (isLoggedIn) {
-      AddCommentMutation();
-    }
-  }
-
-  $: needsLoginService = auth.findMissingAuthServices(result.errors)[0];
 </script>
 
 <div>
   <h2>AddCommentMutation</h2>
   <pre>{JSON.stringify(result, null, 2)}</pre>
   <button on:click={AddCommentMutation}>Run AddCommentMutation</button>
-  {#if needsLoginService}
-    <button on:click={() => handleLogin(needsLoginService)}>Login to
-      {needsLoginService}</button>
-  {/if}
-  {#if result.error}
-    {@html suggestCORSSetup(result.error)}
-  {/if}
+  <CheckLogin {result} />
 </div>
