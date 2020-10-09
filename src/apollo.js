@@ -7,23 +7,21 @@ import OneGraphAuth from "onegraph-auth";
 import SubscriptionClient from "onegraph-subscription-client";
 import ApolloClient from "apollo-client";
 
-const APP_ID = "643ee0a8-f9ee-4217-a4b5-52ee1d2c4846";
+const APP_ID = "e20f0091-5f3a-4100-85d0-2302aa54365b";
 
 export const auth = new OneGraphAuth({
   appId: APP_ID,
-  oneGraphOrigin: "https://serve.onegraph.io/",
 });
 
 const subscriptionClient = new SubscriptionClient(APP_ID, {
   oneGraphAuth: auth,
   reconnect: true,
   lazy: true,
-  host: "serve.onegraph.io",
 });
 
 // Apollo client setup
 const httpLink = new HttpLink({
-  uri: `https://serve.onegraph.io/graphql?app_id=${APP_ID}`,
+  uri: `https://serve.onegraph.com/graphql?app_id=${APP_ID}`,
   fetch,
 });
 
