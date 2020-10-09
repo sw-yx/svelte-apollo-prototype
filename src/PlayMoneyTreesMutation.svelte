@@ -1,32 +1,31 @@
-
 <!-- PlayMoneyTreesMutation.svelte -->
 <script>
- import { restore, mutate } from "svelte-apollo";
- import { auth, client, suggestCORSSetup } from "./apollo";
- import gql from "graphql-tag";
- 
- const PLAY_MONEY_TREES_MUTATION = gql`
-fragment SpotifyPlayerFragment on SpotifyPlayer {
-  isPlaying
-  progressMs
-  item {
-    id
-    isPlayable
-    name
-    uri
-  }
-}
-mutation PlayMoneyTrees {
-  spotify {
-    playTrack(input: {trackIds: "2HbKqm4o0w5wEeEFXm2sD4"}) {
-      player {
-        ...SpotifyPlayerFragment
+  import { restore, mutate } from "svelte-apollo";
+  import { auth, client, suggestCORSSetup } from "./apollo";
+  import gql from "graphql-tag";
+
+  const PLAY_MONEY_TREES_MUTATION = gql`
+    fragment SpotifyPlayerFragment on SpotifyPlayer {
+      isPlaying
+      progressMs
+      item {
+        id
+        isPlayable
+        name
+        uri
       }
     }
-  }
-}`;
+    mutation PlayMoneyTrees {
+      spotify {
+        playTrack(input: { trackIds: "2HbKqm4o0w5wEeEFXm2sD4" }) {
+          player {
+            ...SpotifyPlayerFragment
+          }
+        }
+      }
+    }
+  `;
 
-  
   let result = {};
 
   async function PlayMoneyTreesMutation() {
@@ -65,4 +64,3 @@ mutation PlayMoneyTrees {
     {@html suggestCORSSetup(result.error)}
   {/if}
 </div>
-

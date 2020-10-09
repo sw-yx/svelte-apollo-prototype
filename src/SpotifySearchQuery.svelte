@@ -1,33 +1,33 @@
-
 <!-- SpotifySearchQuery.svelte -->
 <script context="module">
- import gql from "graphql-tag";
- import { auth, client } from "./apollo";
- 
- const SPOTIFY_SEARCH_QUERY = gql`
-fragment SpotifyTrackFragment on SpotifyTrack {
-  isPlayable
-  id
-  name
-  artists {
-    id
-    name
-    images {
-      height
-      url
-      width
-    }
-  }
-}
-query SpotifySearch($search: String = "win win win") {
-  spotify {
-    search(data: {query: $search}) {
-      tracks {
-        ...SpotifyTrackFragment
+  import gql from "graphql-tag";
+  import { auth, client } from "./apollo";
+
+  const SPOTIFY_SEARCH_QUERY = gql`
+    fragment SpotifyTrackFragment on SpotifyTrack {
+      isPlayable
+      id
+      name
+      artists {
+        id
+        name
+        images {
+          height
+          url
+          width
+        }
       }
     }
-  }
-}`;
+    query SpotifySearch($search: String = "win win win") {
+      spotify {
+        search(data: { query: $search }) {
+          tracks {
+            ...SpotifyTrackFragment
+          }
+        }
+      }
+    }
+  `;
 
   export async function preload() {
     return {
@@ -47,7 +47,7 @@ query SpotifySearch($search: String = "win win win") {
 
   const request = query(client, {
     query: SPOTIFY_SEARCH_QUERY,
-    variables: {"search": search},
+    variables: { search: search },
     errorPolicy: "all",
   });
 
@@ -71,13 +71,14 @@ query SpotifySearch($search: String = "win win win") {
       <li>Loading...</li>
     {:then result}
       <pre>{JSON.stringify(result, null, 2)}</pre>
-      <button on:click={() => request.refetch({fetchPolicy: 'network-only'})}>
+      <button on:click={() => request.refetch({ fetchPolicy: 'network-only' })}>
         Refetch
       </button>
-  
+
       {#if needsLoginService(result)}
         <button on:click={() => handleLogin(needsLoginService(result))}>
-          Login to {needsLoginService(result)}
+          Login to
+          {needsLoginService(result)}
         </button>
       {/if}
     {:catch error}

@@ -1,27 +1,29 @@
-
 <!-- AddCommentMutation.svelte -->
 <script>
- import { restore, mutate } from "svelte-apollo";
- import { auth, client, suggestCORSSetup } from "./apollo";
- import gql from "graphql-tag";
- 
- const ADD_COMMENT_MUTATION = gql`
-mutation AddComment($body: String!) {
-  gitHub {
-    addComment(input: {subjectId: "MDU6SXNzdWU3MTc4NjkyMTg=", body: $body}) {
-      subject {
-        id
-      }
-      commentEdge {
-        node {
-          id
+  import { restore, mutate } from "svelte-apollo";
+  import { auth, client, suggestCORSSetup } from "./apollo";
+  import gql from "graphql-tag";
+
+  const ADD_COMMENT_MUTATION = gql`
+    mutation AddComment($body: String!) {
+      gitHub {
+        addComment(
+          input: { subjectId: "MDU6SXNzdWU3MTc4NjkyMTg=", body: $body }
+        ) {
+          subject {
+            id
+          }
+          commentEdge {
+            node {
+              id
+            }
+          }
         }
       }
     }
-  }
-}`;
+  `;
 
-   // Props to be passed in
+  // Props to be passed in
   export let body;
   let result = {};
 
@@ -29,7 +31,7 @@ mutation AddComment($body: String!) {
     try {
       result = await mutate(client, {
         mutation: ADD_COMMENT_MUTATION,
-        variables: {"body": body},
+        variables: { body: body },
         errorPolicy: "all",
       });
       console.log("Ran AddCommentMutation", result);
@@ -61,4 +63,3 @@ mutation AddComment($body: String!) {
     {@html suggestCORSSetup(result.error)}
   {/if}
 </div>
-

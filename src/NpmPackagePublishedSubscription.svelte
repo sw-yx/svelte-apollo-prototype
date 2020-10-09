@@ -1,24 +1,22 @@
-
 <!-- NpmPackagePublishedSubscription.svelte -->
 <script>
- import gql from "graphql-tag";
- import { auth, client, suggestCORSSetup } from "./apollo";
- import { subscribe } from "svelte-apollo";
- 
- const NPM_PACKAGE_PUBLISHED_SUBSCRIPTION = gql`
-subscription NpmPackagePublished {
-  npm {
-    allPublishActivity {
-      package {
-        id
-        name
-        description
+  import gql from "graphql-tag";
+  import { auth, client, suggestCORSSetup } from "./apollo";
+  import { subscribe } from "svelte-apollo";
+
+  const NPM_PACKAGE_PUBLISHED_SUBSCRIPTION = gql`
+    subscription NpmPackagePublished {
+      npm {
+        allPublishActivity {
+          package {
+            id
+            name
+            description
+          }
+        }
       }
     }
-  }
-}`;
-
-  
+  `;
 
   const subscription = subscribe(client, {
     query: NPM_PACKAGE_PUBLISHED_SUBSCRIPTION,
@@ -51,18 +49,15 @@ subscription NpmPackagePublished {
         <pre>{JSON.stringify(results, null, 2)}</pre>
       </li>
     {:catch error}
-      <li>
-        Error loading:
-        {JSON.stringify(error, null, 2)}
-      </li>
+      <li>Error loading: {JSON.stringify(error, null, 2)}</li>
       {#if needsLoginService(error)}
         <button on:click={() => handleLogin(needsLoginService(error))}>
-          Login to {needsLoginService(error)}
+          Login to
+          {needsLoginService(error)}
         </button>
       {/if}
-  
+
       {@html suggestCORSSetup(error)}
     {/await}
   </ul>
 </div>
-

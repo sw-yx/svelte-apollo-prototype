@@ -1,32 +1,31 @@
-
 <!-- PauseMutation.svelte -->
 <script>
- import { restore, mutate } from "svelte-apollo";
- import { auth, client, suggestCORSSetup } from "./apollo";
- import gql from "graphql-tag";
- 
- const PAUSE_MUTATION = gql`
-fragment SpotifyPlayerFragment on SpotifyPlayer {
-  isPlaying
-  progressMs
-  item {
-    id
-    isPlayable
-    name
-    uri
-  }
-}
-mutation Pause {
-  spotify {
-    pausePlayer {
-      player {
-        ...SpotifyPlayerFragment
+  import { restore, mutate } from "svelte-apollo";
+  import { auth, client, suggestCORSSetup } from "./apollo";
+  import gql from "graphql-tag";
+
+  const PAUSE_MUTATION = gql`
+    fragment SpotifyPlayerFragment on SpotifyPlayer {
+      isPlaying
+      progressMs
+      item {
+        id
+        isPlayable
+        name
+        uri
       }
     }
-  }
-}`;
+    mutation Pause {
+      spotify {
+        pausePlayer {
+          player {
+            ...SpotifyPlayerFragment
+          }
+        }
+      }
+    }
+  `;
 
-  
   let result = {};
 
   async function PauseMutation() {
@@ -65,4 +64,3 @@ mutation Pause {
     {@html suggestCORSSetup(result.error)}
   {/if}
 </div>
-

@@ -1,32 +1,31 @@
-
 <!-- PreviousMutation.svelte -->
 <script>
- import { restore, mutate } from "svelte-apollo";
- import { auth, client, suggestCORSSetup } from "./apollo";
- import gql from "graphql-tag";
- 
- const PREVIOUS_MUTATION = gql`
-fragment SpotifyPlayerFragment on SpotifyPlayer {
-  isPlaying
-  progressMs
-  item {
-    id
-    isPlayable
-    name
-    uri
-  }
-}
-mutation Previous {
-  spotify {
-    skipPreviousTrack {
-      player {
-        ...SpotifyPlayerFragment
+  import { restore, mutate } from "svelte-apollo";
+  import { auth, client, suggestCORSSetup } from "./apollo";
+  import gql from "graphql-tag";
+
+  const PREVIOUS_MUTATION = gql`
+    fragment SpotifyPlayerFragment on SpotifyPlayer {
+      isPlaying
+      progressMs
+      item {
+        id
+        isPlayable
+        name
+        uri
       }
     }
-  }
-}`;
+    mutation Previous {
+      spotify {
+        skipPreviousTrack {
+          player {
+            ...SpotifyPlayerFragment
+          }
+        }
+      }
+    }
+  `;
 
-  
   let result = {};
 
   async function PreviousMutation() {
@@ -65,4 +64,3 @@ mutation Previous {
     {@html suggestCORSSetup(result.error)}
   {/if}
 </div>
-
